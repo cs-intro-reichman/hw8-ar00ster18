@@ -54,7 +54,7 @@ public class Network {
      *  If any of the two names is not a user in this network,
      *  or if the "follows" addition failed for some reason, returns false. */
     public boolean addFollowee(String name1, String name2) {
-        if (getUser(name1) == null || getUser(name2) == null){
+        if (getUser(name1) == null || getUser(name2) == null || name1.equals(name2)){
             return false;
         }
         if (getUser(name1).addFollowee(name2)){
@@ -70,10 +70,11 @@ public class Network {
         int max = 0;
         for (int i = 0; i < userCount; i++){
             if(users[i].getName() == name){
+                i++;
                 continue;
             }
             if (users[i].countMutual(getUser(name)) > max){
-                rec = getUser(name);
+                rec = users[i];
                 max = users[i].countMutual(getUser(name));
             }
         }
@@ -90,6 +91,9 @@ public class Network {
                 max = followeeCount(users[i].getName());
                 output = users[i];
             }
+        }
+        if (output == null){
+            return null;
         }
         
         return output.getName();
@@ -112,10 +116,9 @@ public class Network {
 
     // Returns a textual description of all the users in this network, and who they follow.
     public String toString() {
-        String output = "";
-       System.out.println("Network:");
+        String output = "Network:";
        for (int i = 0; i < userCount; i++){
-        output += users[i] + "\n";
+        output += "\n" + users[i];
        }
        return output;
     }
